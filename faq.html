@@ -201,16 +201,16 @@
               to try new features before they are generally available.
             </p> 
             <p>
-              In order to use snapshot releases, you need to add the Sonatype OSS Snapshots
+              In order to use snapshot releases, you need to add the Sonatype Central Portal Snapshots
               repository in your Maven <kbd>pom.xml</kbd> file, like this:
             </p>
             
 <pre class="prettyprint linenums language-xml">
 &lt;repositories&gt;
   &lt;repository&gt;
-    &lt;id&gt;sonatype-nexus-snapshots&lt;/id&gt;
-    &lt;name&gt;Sonatype Nexus Snapshots&lt;/name&gt;
-    &lt;url&gt;<b>https://oss.sonatype.org/content/repositories/snapshots</b>&lt;/url&gt;
+    &lt;id&gt;central-portal-snapshots&lt;/id&gt;
+    &lt;name&gt;Central Portal Snapshots&lt;/name&gt;
+    &lt;url&gt;<b>https://central.sonatype.com/repository/maven-snapshots/</b>&lt;/url&gt;
     &lt;snapshots&gt;
       &lt;enabled&gt;true&lt;/enabled&gt;
     &lt;/snapshots&gt;
@@ -221,17 +221,17 @@
             <p>
               Also, you will have to modify your unbescape dependency/ies to use a
               <i>snapshot version</i>, which usually consists of the version number of the
-              <b>next</b> release (not the current one), followed by <kbd>.BUILD-SNAPSHOT</kbd>.
-              For example, meanwhile <kbd>1.1.6.RELEASE</kbd> is the latest published stable release,
-              snapshots will probably appear under the <kbd>1.1.7.BUILD-SNAPSHOT</kbd> or
-              maybe <kbd>1.2.0.BUILD-SNAPSHOT</kbd> version numbers:
+              <b>next</b> release (not the current one), followed by <kbd>-SNAPSHOT</kbd>.
+              For example, meanwhile <kbd>1.1.7.RELEASE</kbd> is the latest published stable release,
+              snapshots will probably appear under the <kbd>1.1.8-SNAPSHOT</kbd> or
+              maybe <kbd>1.2.0-SNAPSHOT</kbd> version numbers:
             </p>
         
 <pre class="prettyprint linenums language-xml">
 &lt;dependency&gt;
   &lt;groupId&gt;org.unbescape&lt;/groupId&gt;
   &lt;artifactId&gt;unbescape&lt;/artifactId&gt;
-  &lt;version&gt;<b>1.1.7.BUILD-SNAPSHOT</b>&lt;/version&gt;
+  &lt;version&gt;<b>1.1.8-SNAPSHOT</b>&lt;/version&gt;
   &lt;scope&gt;compile&lt;/scope&gt;
 &lt;/dependency&gt;
 </pre>            

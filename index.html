@@ -140,7 +140,7 @@ final String unescapedText = HtmlEscape.unescapeHtml(escapedText);
 </pre>
 
           <p>
-              Note this includes support for unescaping HTML5's more than 2,300 <em>entities</em>
+              Note this includes support for unescaping HTML5's more than 2,200 <em>entities</em>
               or <em>named character references</em> (like <kbd>&amp;tcedil;</kbd> = <kbd>'&tcedil;'</kbd>).
               And also decimal/hexadecimal references (like <kbd>&amp;#225;</kbd> or <kbd>&amp;#xE1;</kbd>
               = <kbd>'&#xE1;'</kbd>). And the full Unicode character set, including codepoints &gt; U+FFFF
@@ -251,7 +251,7 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
             
               <tr>
                 <td class="span3">
-                  <strong>High performance</strong></strong>
+                  <strong>High performance</strong>
                 </td>
                 <td class="span9">
                     <ul>
@@ -278,7 +278,7 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
 
               <tr>
                   <td class="span3">
-                      <strong>Highly configurable</strong></strong>
+                      <strong>Highly configurable</strong>
                   </td>
                   <td class="span9">
                       <ul>
@@ -297,7 +297,7 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
 
               <tr>
                   <td class="span3">
-                      <strong>Documented API</strong></strong>
+                      <strong>Documented API</strong>
                   </td>
                   <td class="span9">
                       <ul>
@@ -313,12 +313,15 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
 
               <tr>
                   <td class="span3">
-                      <strong>Unicode</strong></strong>
+                      <strong>Unicode</strong>
                   </td>
                   <td class="span9">
                       <ul>
                           <li>
                               All escape and unescape operations support the whole Unicode character set: <kbd>U+0000</kbd> to <kbd>U+10FFFF</kbd>, including characters not representable by only one char in Java (&gt;<kbd>U+FFFF</kbd>).
+                          </li>
+                          <li>
+                              Characters that a language cannot represent (like <kbd>U+0000</kbd> or unpaired surrogates in HTML or CSS) are handled as established by the specification of that language. See the <a href="javadoc.html">JavaDoc API documentation</a> for details.
                           </li>
                       </ul>
                   </td>
@@ -341,6 +344,11 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                         </li>
                         <li>
                             Support for unescape of double-char NCRs in HTML5: <kbd>&amp;fjlig;</kbd> &rarr; <kbd>fj</kbd>.
+                        </li>
+                        <li>
+                            <kbd>U+0000</kbd> and unpaired surrogates, which are not allowed in HTML, are always escaped (whatever the escape level).
+                            Note that browsers read these references as <kbd>U+FFFD</kbd>, and that the control characters <kbd>U+0080</kbd> to <kbd>U+009F</kbd>
+                            cannot be represented by character references in HTML.
                         </li>
                         <li>
                             Support for a set of HTML5 unescape tweaks included in the HTML5 specification:
@@ -375,6 +383,9 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                         <li>
                             Automatic escaping of allowed control characters.
                         </li>
+                        <li>
+                            Unescape operations reject numerical references to characters not allowed in XML (e.g. <kbd>&amp;#0;</kbd>), as these are not well-formed.
+                        </li>
                     </ul>
                 </td>
               </tr>
@@ -394,7 +405,17 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                             Automatic escape of <kbd>/</kbd> (as <kbd>&#92;/</kbd> if possible) when it appears after <kbd>&lt;</kbd>, as in <kbd>&lt;/something&gt;</kbd>.
                         </li>
                         <li>
+                            <kbd>&lt;</kbd>, <kbd>&gt;</kbd> and <kbd>&amp;</kbd> are always escaped (e.g. <kbd>&#92;x3C</kbd>, <kbd>&#92;x3E</kbd>, <kbd>&#92;x26</kbd>), so that escaped
+                            literals never contain them and can be safely placed inside <kbd>&lt;script&gt;</kbd> elements in HTML and XHTML.
+                        </li>
+                        <li>
+                            Escaped text can be placed inside single-quoted, double-quoted and (untagged) <strong>template literals</strong>: <kbd>`</kbd> is always escaped
+                            (as <kbd>&#92;`</kbd>), <kbd>$</kbd> is escaped when followed by <kbd>{</kbd> or at the end of the text (as <kbd>&#92;$</kbd>), and <kbd>{</kbd> is escaped at the
+                            beginning of the text (as <kbd>&#92;{</kbd>).
+                        </li>
+                        <li>
                             Support for escaping non-displayable, control characters: <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                            <kbd>U+0000</kbd> is escaped as <kbd>&#92;0</kbd>, except when followed by a digit (as it would be read as an octal escape).
                         </li>
                         <li>
                             Support for X-based hexadecimal escapes (a.k.a. <em>hexadecimal escapes</em>) both in escape
@@ -429,6 +450,10 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                             Support for escaping non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
                         </li>
                         <li>
+                            <kbd>&lt;</kbd>, <kbd>&gt;</kbd> and <kbd>&amp;</kbd> are always escaped (as <kbd>&#92;u003C</kbd>, <kbd>&#92;u003E</kbd> and <kbd>&#92;u0026</kbd>), so that
+                            escaped JSON never contains them and can be safely placed inside <kbd>&lt;script&gt;</kbd> elements in HTML and XHTML.
+                        </li>
+                        <li>
                             Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape
                             and unescape operations: <kbd>&#92;u00E1</kbd>.
                         </li>
@@ -443,10 +468,13 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                   <td>
                       <ul>
                           <li>
-                              Support for escape operations using percent-encoding (<kbd>%HH</kbd>).
+                              Support for escape and unescape operations using percent-encoding (<kbd>%HH</kbd>), with a configurable encoding (<kbd>UTF-8</kbd> by default).
                           </li>
                           <li>
-                              Escape URI paths, path fragments, query parameters and fragment identifiers.
+                              Escape and unescape URI paths, path segments, query parameters and fragment identifiers (including <kbd>+</kbd> as whitespace in query parameters).
+                          </li>
+                          <li>
+                              Invalid percent-encoded sequences are rejected when unescaping, and unpaired surrogates are encoded as <kbd>U+FFFD</kbd> when escaping, as established by the WHATWG URL Standard.
                           </li>
                       </ul>
                   </td>
@@ -476,6 +504,14 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                         <li>
                             Support for unescaping unicode characters &gt;<kbd>&#92;uFFFF</kbd> both when represented in standard form (one char,
                             <kbd>&#92;20000</kbd>) and non-standard (surrogate pair, <kbd>&#92;D840\DC00</kbd>, used by older WebKit browsers).
+                        </li>
+                        <li>
+                            <kbd>&lt;</kbd>, <kbd>&gt;</kbd> and <kbd>&amp;</kbd> are always escaped as hexadecimal escapes (e.g. <kbd>&#92;3C </kbd>), so that escaped text never
+                            contains them and can be safely placed inside <kbd>&lt;style&gt;</kbd> elements in HTML and XHTML.
+                        </li>
+                        <li>
+                            Unescape operations follow the CSS Syntax specification: escapes for <kbd>U+0000</kbd>, surrogates or values out of the Unicode range
+                            are unescaped as <kbd>U+FFFD</kbd>, any whitespace (including newlines) ends a hexadecimal escape, and escaped newlines are line continuations.
                         </li>
                     </ul>
                 </td>
@@ -515,7 +551,7 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                               (only in Character literals).
                           </li>
                           <li>
-                              Support for escaping non-displayable, control characters: <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                              Support for escaping non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
                           </li>
                           <li>
                               Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape
@@ -537,10 +573,11 @@ final String escapedText = HtmlEscape.escapeHtml5(unescapedText);
                       <ul>
                           <li>
                               Support for the Java Properties basic escape set: <kbd>&#92;t</kbd>, <kbd>&#92;n</kbd>, <kbd>&#92;f</kbd>, <kbd>&#92;r</kbd>, <kbd>&#92;\</kbd>. When escaping <kbd>.properties</kbd>
-                              keys (not values) <kbd>&#92; </kbd>, <kbd>&#92;:</kbd> and <kbd>&#92;=</kbd> will be applied too.
+                              keys <kbd>&#92; </kbd>, <kbd>&#92;:</kbd>, <kbd>&#92;=</kbd>, <kbd>&#92;#</kbd> and <kbd>&#92;!</kbd> will be applied too, and when escaping values, a
+                              whitespace, <kbd>:</kbd> or <kbd>=</kbd> at the beginning of the value will be escaped (as it would otherwise be read as part of the key-value separator).
                           </li>
                           <li>
-                              Support for escaping non-displayable, control characters: <kbd>U+0001</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
+                              Support for escaping non-displayable, control characters: <kbd>U+0000</kbd> to <kbd>U+001F</kbd> and <kbd>U+007F</kbd> to <kbd>U+009F</kbd>.
                           </li>
                           <li>
                               Support for U-based hexadecimal escapes (a.k.a. <em>unicode escapes</em>) both in escape

@@ -144,7 +144,7 @@ final String unescapedText = HtmlEscape.unescapeHtml(escapedText);
               or <em>named character references</em> (like <kbd>&amp;tcedil;</kbd> = <kbd>'&tcedil;'</kbd>).
               And also decimal/hexadecimal references (like <kbd>&amp;#225;</kbd> or <kbd>&amp;#xE1;</kbd>
               = <kbd>'&#xE1;'</kbd>). And the full Unicode character set, including codepoints &gt; U+FFFF
-              (like <kbd>&amp;#x20000;</kbd> = <kbd>'&#x20000;'</kbd>). And even performing a good amount
+              (like <kbd>&amp;#x20BB7;</kbd> = <kbd>'&#x20BB7;'</kbd>). And even performing a good amount
               of <em>magic</em> included in the HTML5 specification (like allowing some references not to
               end in a semicolon, like <kbd>&amp;aacute</kbd> = <kbd>'&aacute'</kbd>).
               So this text:
@@ -153,7 +153,7 @@ final String unescapedText = HtmlEscape.unescapeHtml(escapedText);
 <pre class="prettyprint language-html">
 In order to have full HTML support, escape tools should provide
 complete support for characters like the Czech letter '&amp;Tcaron;'
-or the Chinese symbol '&amp;#x200AD;'. And implement some legacy
+or the Chinese symbol '&amp;#x20BB7;'. And implement some legacy
 compatibility rules like displaying an &amp;ldquo;A with an acute
 accent&amp;rdquo; like '&amp;aacute' or an EURO symbol like '&amp;#x80;'.
 </pre>
@@ -169,7 +169,7 @@ accent&amp;rdquo; like '&amp;aacute' or an EURO symbol like '&amp;#x80;'.
 <pre class="prettyprint language-html">
 In order to have full HTML support, escape tools should provide
 complete support for characters like the Czech letter '&Tcaron;' or the
-Chinese symbol '&#x200AD;'. And implement some legacy-compatibility rules
+Chinese symbol '&#x20BB7;'. And implement some legacy-compatibility rules
 like displaying an &ldquo;A with an acute accent&rdquo; like '&aacute' or an EURO
 symbol like '&#x80;'.
 </pre>
